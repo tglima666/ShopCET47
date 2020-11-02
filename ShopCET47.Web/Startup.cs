@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ShopCET47.Web.Data;
+using ShopCET47.Web.Data.Repositories;
 
 namespace ShopCET47.Web
 {
@@ -31,7 +32,10 @@ namespace ShopCET47.Web
                 cfg.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            //Vou usar a minha class SeedDb para alimentar as tabelas da BD
             services.AddTransient<SeedDb>();
+
+            services.AddScoped<IRepository, Repository>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {
