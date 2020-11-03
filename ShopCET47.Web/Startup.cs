@@ -51,7 +51,8 @@ namespace ShopCET47.Web
             //Vou usar a minha class SeedDb para alimentar as tabelas da BD
             services.AddTransient<SeedDb>();
 
-            services.AddScoped<IRepository, Repository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ICountryRepository, CountryRepository>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {

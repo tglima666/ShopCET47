@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShopCET47.Web.Data.Entities
 {
-    public class Product
+    public class Product : IEntity
     {
         public int ID { get; set; }
 
