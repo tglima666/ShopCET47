@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Internal;
 using ShopCET47.Web.Data.Entities;
+using ShopCET47.Web.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +12,13 @@ namespace ShopCET47.Web.Data
     public class SeedDb
     {
         private readonly DataContext _context;
-        private readonly UserManager<User> _userManager;
+        private readonly IUserHelper _userHelper;
         private Random _random;
 
-        public SeedDb(DataContext context, UserManager<User> userManager)
+        public SeedDb(DataContext context, IUserHelper userHelper)
         {
             _context = context;
-            _userManager = userManager;
+            _userHelper = userHelper;
             _random = new Random();
         }
 
@@ -25,7 +26,7 @@ namespace ShopCET47.Web.Data
         {
             await _context.Database.EnsureCreatedAsync();
 
-            var user = await _userManager.FindByEmailAsync("tiago.sa.lima@cinel.pt");
+            var user = await _userHelper.GetUserByEmailAsync("tiago.sa.lima@formandos.cinel.pt");
 
             if (user == null)
             {
@@ -33,11 +34,11 @@ namespace ShopCET47.Web.Data
                 {
                     FirstName = "Tiago",
                     LastName = "Lima",
-                    Email = "tiago.sa.lima@cinel.pt",
-                    UserName = "tiago.sa.lima@cinel.pt"
+                    Email = "tiago.sa.lima@formandos.cinel.pt",
+                    UserName = "tiago.sa.lima@formandos.cinel.pt"
                 };
 
-                var result = await _userManager.CreateAsync(user, "123456");
+                var result = await _userHelper.AddUserAsync(user, "123456");
 
                 if (result != IdentityResult.Success)
                 {
