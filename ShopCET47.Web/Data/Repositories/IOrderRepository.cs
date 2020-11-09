@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShopCET47.Web.Data.Repositories
 {
-    interface IOrderRepository : IGenericRepository<Order>
+    public interface IOrderRepository : IGenericRepository<Order>
     {
         Task<IQueryable<Order>> GetOrderAsync(string username);
     }
