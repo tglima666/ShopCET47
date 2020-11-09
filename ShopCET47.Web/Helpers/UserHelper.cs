@@ -25,6 +25,11 @@ namespace ShopCET47.Web.Helpers
             return await _userManager.CreateAsync(user, password);
         }
 
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string OldPassword, string NewPassword)
+        {
+            return await _userManager.ChangePasswordAsync(user, OldPassword, NewPassword);
+        }
+
         public async Task<User> GetUserByEmailAsync(string email)
         {
             return await _userManager.FindByEmailAsync(email);
@@ -42,6 +47,16 @@ namespace ShopCET47.Web.Helpers
         public async Task LogoutAsync()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(User user)
+        {
+            return await _userManager.UpdateAsync(user);
+        }
+
+        Task<Microsoft.AspNetCore.Identity.SignInResult> IUserHelper.LoginAsync(LoginViewModel model)
+        {
+            throw new NotImplementedException();
         }
     }
 }
