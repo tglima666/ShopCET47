@@ -22,7 +22,6 @@ namespace ShopCET47.Web.Helpers
         Task<IdentityResult> UpdateUserAsync(User user);
 
         Task<IdentityResult> ChangePasswordAsync(User user, string OldPassword, string NewPassword);
-
-
+        Task<bool> IsUserInRoleAsync(User user, string v);
     }
 }
