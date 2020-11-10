@@ -35,7 +35,12 @@ namespace ShopCET47.Web.Helpers
             return await _userManager.FindByEmailAsync(email);
         }
 
-        public async Task<SignInResult> LoginAsync(LoginViewModel model)
+        public Task<bool> IsUserInRoleAsync(User user, string v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Microsoft.AspNetCore.Identity.SignInResult> LoginAsync(LoginViewModel model)
         {
             return await _signInManager.PasswordSignInAsync(
                 model.Username,
