@@ -21,11 +21,11 @@ namespace ShopCET47.Web.Data.Repositories
             return _context.Set<T>().AsNoTracking();
         }
 
-        public async Task<T> GetByIDAsync(int id)
+        public async Task<T> GetByIdAsync(int Id)
         {
             return await _context.Set<T>()
                 .AsNoTracking()
-                .FirstOrDefaultAsync(e => e.ID == id);
+                .FirstOrDefaultAsync(e => e.Id == Id);
         }
 
         public async Task CreateAsync(T entity)
@@ -46,9 +46,9 @@ namespace ShopCET47.Web.Data.Repositories
             await SaveAllAsync();
         }
 
-        public async Task<bool> ExistAsync(int id)
+        public async Task<bool> ExistAsync(int Id)
         {
-            return await _context.Set<T>().AnyAsync(e => e.ID == id);
+            return await _context.Set<T>().AnyAsync(e => e.Id == Id);
         }
 
         public async Task<bool> SaveAllAsync()

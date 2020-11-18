@@ -27,13 +27,13 @@ namespace ShopCET47.Web.Data.Repositories
             return _context.Products.Find(id);
         }
 
-        //Método que adiciona um produto à tabela
+        //Método que adiciona um produto á tabela
         public void AddProduct(Product product)
         {
             _context.Products.Add(product);
         }
 
-        //Método que actualiza (update) um produto
+        //Método que atualiza (update) um produto
         public void UpdateProduct(Product product)
         {
             _context.Update(product);
@@ -45,16 +45,16 @@ namespace ShopCET47.Web.Data.Repositories
             _context.Products.Remove(product);
         }
 
-        //Método que actualiza a BD
+        //Método que atualiza a BD
         public async Task<bool> SaveAllAsync()
         {
             return await _context.SaveChangesAsync() > 0;
         }
 
-        //mètodo que verifica se o produto existe
-        public bool ProductExists(int id)
+        //Método que verifica se o produto existe
+        public bool ProductExists(int Id)
         {
-            return _context.Products.Any(p => p.ID == id);
+            return _context.Products.Any(p => p.Id == Id);
         }
     }
 }

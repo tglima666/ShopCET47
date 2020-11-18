@@ -8,7 +8,7 @@ namespace ShopCET47.Web.Data.Entities
 {
     public class Order : IEntity
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [Display(Name = "Order date")]
@@ -32,14 +32,14 @@ namespace ShopCET47.Web.Data.Entities
 
         [DisplayFormat(DataFormatString = "{0:C2}")]
         public decimal Value { get { return this.Items == null ? 0 : this.Items.Sum(i => i.Value); } }
-        
+
         [Display(Name = "Order date")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm tt}", ApplyFormatInEditMode = false)]
         public DateTime? OrderDateLocal
         {
             get
             {
-                if(this.OrderDate == null)
+                if (this.OrderDate == null)
                 {
                     return null;
                 }

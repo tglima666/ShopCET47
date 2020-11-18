@@ -12,7 +12,7 @@ namespace ShopCET47.Web.Data.Repositories
 
         IEnumerable<Product> GetProducts();
 
-        bool ProductExists(int id);
+        bool ProductExists(int Id);
 
         void RemoveProduct(Product product);
 

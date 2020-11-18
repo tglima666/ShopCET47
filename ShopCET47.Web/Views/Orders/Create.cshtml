@@ -30,27 +30,26 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelitem => item.Product.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelitem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelitem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelitem => item.Value)
-            </td>
-            <td>
-                <a asp-action="Increase" asp-route-id="@item.ID" class="btn btn-warning"><i class="fa fa-plus"></i></a>
-                <a asp-action="Decrease" asp-route-id="@item.ID" class="btn btn-info"><i class="fa fa-minus"></i></a>
-                <a asp-action="DeleteItem" asp-route-id="@item.ID" class="btn btn-danger">Delete</a>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value)
+                </td>
+                <td>
+                    <a asp-action="Increase" asp-route-id="@item.Id" class="btn btn-warning"><i class="fa fa-plus"></i></a>
+                    <a asp-action="Decrease" asp-route-id="@item.Id" class="btn btn-info"><i class="fa fa-minus"></i></a>
+                    <a asp-action="DeleteItem" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
         }
     </tbody>
-
 </table>
 

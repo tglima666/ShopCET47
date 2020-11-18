@@ -11,7 +11,7 @@ namespace ShopCET47.Web.Models
     {
         [Display(Name = "Product")]
         [Range(1, int.MaxValue, ErrorMessage = "You must select a product.")]
-        public int ProductID { get; set; }
+        public int ProductId { get; set; }
 
         [Range(0.0001, double.MaxValue, ErrorMessage = "The quantity must be a positive number.")]
         public double Quantity { get; set; }

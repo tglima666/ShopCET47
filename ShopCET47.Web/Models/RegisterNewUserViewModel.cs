@@ -10,7 +10,7 @@ namespace ShopCET47.Web.Models
     public class RegisterNewUserViewModel
     {
         [Required]
-        [Display(Name ="First Name")]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
         [Required]
@@ -27,6 +27,5 @@ namespace ShopCET47.Web.Models
         [Required]
         [Compare("Password")]
         public string Confirm { get; set; }
-
     }
 }

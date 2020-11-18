@@ -16,15 +16,14 @@ namespace ShopCET47.Web.Data.Repositories
             _context = context;
         }
 
-
-        //Metodo para ir à tabela buscar todos os produtos
+        //Método para ir á tabela buscar todos os produtos
         //e colocar numa SelectListItem
         public IEnumerable<SelectListItem> GetComboProducts()
         {
             var list = _context.Products.Select(p => new SelectListItem
             {
                 Text = p.Name,
-                Value = p.ID.ToString()
+                Value = p.Id.ToString()
             }).ToList();
 
             list.Insert(0, new SelectListItem

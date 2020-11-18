@@ -26,8 +26,6 @@ namespace ShopCET47.Web.Controllers
             _userHelper = userHelper;
         }
 
-        
-
         // GET: Products
         public IActionResult Index()
         {
@@ -42,8 +40,7 @@ namespace ShopCET47.Web.Controllers
                 return NotFound();
             }
 
-            var product = await _productRepository.GetByIDAsync(id.Value);
-                
+            var product = await _productRepository.GetByIdAsync(id.Value);
             if (product == null)
             {
                 return NotFound();
@@ -52,7 +49,7 @@ namespace ShopCET47.Web.Controllers
             return View(product);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         // GET: Products/Create
         public IActionResult Create()
         {
@@ -64,7 +61,7 @@ namespace ShopCET47.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,Price,ImageFile,LastPurchase,LastSale,IsAvailable,Stock")] ProductViewModel view)
+        public async Task<IActionResult> Create(ProductViewModel view)
         {
             if (ModelState.IsValid)
             {
@@ -75,12 +72,11 @@ namespace ShopCET47.Web.Controllers
                     var guid = Guid.NewGuid().ToString();
                     var file = $"{guid}.jpg";
 
-                    path = Path.Combine(
-                        Directory.GetCurrentDirectory(),
+                    path = Path.Combine(Directory.GetCurrentDirectory(),
                         "wwwroot\\images\\Products",
                         file);
 
-                    using(var stream = new FileStream(path, FileMode.Create))
+                    using (var stream = new FileStream(path, FileMode.Create))
                     {
                         await view.ImageFile.CopyToAsync(stream);
                     }
@@ -89,7 +85,6 @@ namespace ShopCET47.Web.Controllers
                 }
 
                 var product = this.ToProduct(view, path);
-                
                 product.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 await _productRepository.CreateAsync(product);
                 return RedirectToAction(nameof(Index));
@@ -101,8 +96,8 @@ namespace ShopCET47.Web.Controllers
         {
             return new Product
             {
-                ID = view.ID,
-                ImageURL = path,
+                Id = view.Id,
+                ImageUrl = path,
                 IsAvailable = view.IsAvailable,
                 LastPurchase = view.LastPurchase,
                 LastSale = view.LastSale,
@@ -113,8 +108,8 @@ namespace ShopCET47.Web.Controllers
             };
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Products/Edit/5
-        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -122,15 +117,13 @@ namespace ShopCET47.Web.Controllers
                 return NotFound();
             }
 
-            var product = await _productRepository.GetByIDAsync(id.Value);
-
+            var product = await _productRepository.GetByIdAsync(id.Value);
             if (product == null)
             {
                 return NotFound();
             }
 
             var view = this.ToProductViewModel(product);
-
             return View(view);
         }
 
@@ -138,16 +131,17 @@ namespace ShopCET47.Web.Controllers
         {
             return new ProductViewModel
             {
-                ID = product.ID,
-                ImageURL = product.ImageURL,
+                Id = product.Id,
                 IsAvailable = product.IsAvailable,
                 LastPurchase = product.LastPurchase,
                 LastSale = product.LastSale,
+                ImageUrl = product.ImageUrl,
                 Name = product.Name,
                 Price = product.Price,
                 Stock = product.Stock,
                 User = product.User
             };
+
         }
 
         // POST: Products/Edit/5
@@ -155,9 +149,9 @@ namespace ShopCET47.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Price,ImageFile,LastPurchase,LastSale,IsAvailable,Stock")] ProductViewModel view)
+        public async Task<IActionResult> Edit(int id, ProductViewModel view)
         {
-            if (id != view.ID)
+            if (id != view.Id)
             {
                 return NotFound();
             }
@@ -166,39 +160,33 @@ namespace ShopCET47.Web.Controllers
             {
                 try
                 {
-                    var path = view.ImageURL;
+                    var path = view.ImageUrl;
 
                     if (view.ImageFile != null && view.ImageFile.Length > 0)
                     {
-                        path = string.Empty;
 
-                        if (view.ImageFile != null && view.ImageFile.Length > 0)
+                        var guid = Guid.NewGuid().ToString();
+                        var file = $"{guid}.jpg";
+
+                        path = Path.Combine(Directory.GetCurrentDirectory(),
+                        "wwwroot\\images\\Products",
+                        file);
+
+                        using (var stream = new FileStream(path, FileMode.Create))
                         {
-                            var guid = Guid.NewGuid().ToString();
-                            var file = $"{guid}.jpg";
-
-                            path = Path.Combine(
-                                Directory.GetCurrentDirectory(),
-                                "wwwroot\\images\\Products",
-                                file);
-
-                            using (var stream = new FileStream(path, FileMode.Create))
-                            {
-                                await view.ImageFile.CopyToAsync(stream);
-                            }
-
-                            path = $"~/images/Products/{file}";
+                            await view.ImageFile.CopyToAsync(stream);
                         }
+
+                        path = $"~/images/Products/{file}";
                     }
 
                     var product = this.ToProduct(view, path);
-                    
                     product.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                     await _productRepository.UpdateAsync(product);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (! await _productRepository.ExistAsync(view.ID))
+                    if (!await _productRepository.ExistAsync(view.Id))
                     {
                         return NotFound();
                     }
@@ -212,8 +200,8 @@ namespace ShopCET47.Web.Controllers
             return View(view);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Products/Delete/5
-        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -221,8 +209,7 @@ namespace ShopCET47.Web.Controllers
                 return NotFound();
             }
 
-            var product = await _productRepository.GetByIDAsync(id.Value);
-                
+            var product = await _productRepository.GetByIdAsync(id.Value);
             if (product == null)
             {
                 return NotFound();
@@ -236,9 +223,9 @@ namespace ShopCET47.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _productRepository.GetByIDAsync(id);
+            var product = await _productRepository.GetByIdAsync(id);
             await _productRepository.DeleteAsync(product);
             return RedirectToAction(nameof(Index));
-        }        
+        }
     }
 }

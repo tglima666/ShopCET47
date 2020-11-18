@@ -8,7 +8,7 @@ namespace ShopCET47.Web.Data.Entities
 {
     public class OrderDetailTemp : IEntity
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public User User { get; set; }

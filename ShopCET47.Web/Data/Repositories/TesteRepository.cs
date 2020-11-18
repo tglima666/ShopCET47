@@ -22,12 +22,12 @@ namespace ShopCET47.Web.Data.Repositories
         public IEnumerable<Product> GetProducts()
         {
             var products = new List<Product>();
-            products.Add(new Product { ID = 1, Name = "Um", Price = 10 });
-            products.Add(new Product { ID = 2, Name = "Dois", Price = 20 });
-            products.Add(new Product { ID = 3, Name = "Três", Price = 30 });
-            products.Add(new Product { ID = 4, Name = "Quatro", Price = 40 });
-            products.Add(new Product { ID = 5, Name = "Cinco", Price = 50 });
-            products.Add(new Product { ID = 6, Name = "Seis", Price = 60 });
+            products.Add(new Product { Id = 1, Name = "Um", Price = 10 });
+            products.Add(new Product { Id = 2, Name = "Dois", Price = 20 });
+            products.Add(new Product { Id = 3, Name = "Três", Price = 30 });
+            products.Add(new Product { Id = 4, Name = "Quatro", Price = 40 });
+            products.Add(new Product { Id = 5, Name = "Cinco", Price = 50 });
+            products.Add(new Product { Id = 6, Name = "Seis", Price = 60 });
 
             return products;
         }

@@ -12,16 +12,16 @@ namespace ShopCET47.Web.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUserHelper _userHelper;
+        private readonly IUserHelper userHelper;
 
         public AccountController(IUserHelper userHelper)
         {
-            _userHelper = userHelper;
+            this.userHelper = userHelper;
         }
 
         public IActionResult Login()
         {
-            if(this.User.Identity.IsAuthenticated)
+            if (this.User.Identity.IsAuthenticated)
             {
                 return this.RedirectToAction("Index", "Home");
             }
@@ -32,9 +32,9 @@ namespace ShopCET47.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                var result = await _userHelper.LoginAsync(model);
+                var result = await this.userHelper.LoginAsync(model);
                 if (result.Succeeded)
                 {
                     if (this.Request.Query.Keys.Contains("ReturnUrl"))
@@ -52,7 +52,7 @@ namespace ShopCET47.Web.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            await _userHelper.LogoutAsync();
+            await this.userHelper.LogoutAsync();
             return this.RedirectToAction("Index", "Home");
         }
 
@@ -66,7 +66,7 @@ namespace ShopCET47.Web.Controllers
         {
             if (this.ModelState.IsValid)
             {
-                var user = await _userHelper.GetUserByEmailAsync(model.UserName);
+                var user = await this.userHelper.GetUserByEmailAsync(model.UserName);
                 if (user == null)
                 {
                     user = new User
@@ -77,22 +77,21 @@ namespace ShopCET47.Web.Controllers
                         UserName = model.UserName
                     };
 
-                    var result = await _userHelper.AddUserAsync(user, model.Password);
-
+                    var result = await this.userHelper.AddUserAsync(user, model.Password);
                     if (result != IdentityResult.Success)
                     {
                         this.ModelState.AddModelError(string.Empty, "The user couldn't be created.");
                         return this.View(model);
                     }
 
-                    var LoginViewModel = new LoginViewModel
+                    var loginViewModel = new LoginViewModel
                     {
                         Password = model.Password,
                         RememberMe = false,
                         Username = model.UserName
                     };
 
-                    var result2 = await _userHelper.LoginAsync(LoginViewModel);
+                    var result2 = await this.userHelper.LoginAsync(loginViewModel);
 
                     if (result2.Succeeded)
                     {
@@ -100,7 +99,6 @@ namespace ShopCET47.Web.Controllers
                     }
 
                     this.ModelState.AddModelError(string.Empty, "The user couldn't be login.");
-
                     return this.View(model);
                 }
 
@@ -112,7 +110,7 @@ namespace ShopCET47.Web.Controllers
 
         public async Task<IActionResult> ChangeUser()
         {
-            var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+            var user = await this.userHelper.GetUserByEmailAsync(this.User.Identity.Name);
             var model = new ChangeUserViewModel();
 
             if (user != null)
@@ -129,23 +127,21 @@ namespace ShopCET47.Web.Controllers
         {
             if (this.ModelState.IsValid)
             {
-                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-                if (user!= null)
+                var user = await this.userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+                if (user != null)
                 {
                     user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
-                    var response = await _userHelper.UpdateUserAsync(user);
+                    var response = await this.userHelper.UpdateUserAsync(user);
                     if (response.Succeeded)
                     {
                         this.ViewBag.UserMessage = "User update";
                     }
-
                     else
                     {
                         this.ModelState.AddModelError(string.Empty, response.Errors.FirstOrDefault().Description);
                     }
                 }
-
                 else
                 {
                     this.ModelState.AddModelError(string.Empty, "User not found.");
@@ -165,24 +161,22 @@ namespace ShopCET47.Web.Controllers
         {
             if (this.ModelState.IsValid)
             {
-                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+                var user = await this.userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 if (user != null)
                 {
-                    var result = await _userHelper.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                    var result = await this.userHelper.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
                         return this.RedirectToAction("ChangeUser");
                     }
-
                     else
                     {
                         this.ModelState.AddModelError(string.Empty, result.Errors.FirstOrDefault().Description);
                     }
                 }
-
                 else
                 {
-                    this.ModelState.AddModelError(string.Empty, "User not found.");
+                    this.ModelState.AddModelError(string.Empty, "User no found.");
                 }
             }
 
@@ -190,3 +184,4 @@ namespace ShopCET47.Web.Controllers
         }
     }
 }
+

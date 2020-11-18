@@ -7,10 +7,8 @@ namespace ShopCET47.Web.Data.Entities
 {
     public interface IEntity
     {
-        int ID { get; set; }
+        int Id { get; set; }
 
-        //bool WasDeleted { get; set; };
-
-        
+        //bool WasDeleted { get; set};  
     }
 }

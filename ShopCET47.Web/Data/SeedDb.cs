@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Internal;
 using ShopCET47.Web.Data.Entities;
 using ShopCET47.Web.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,8 +25,10 @@ namespace ShopCET47.Web.Data
         {
             await _context.Database.EnsureCreatedAsync();
 
-            var user = await _userHelper.GetUserByEmailAsync("tiago.sa.lima@formandos.cinel.pt");
+            await _userHelper.CheckRoleAsync("Admin");
+            await _userHelper.CheckRoleAsync("Customer");
 
+            var user = await _userHelper.GetUserByEmailAsync("tiago.sa.lima@formandos.cinel.pt");
             if (user == null)
             {
                 user = new User
@@ -35,15 +36,22 @@ namespace ShopCET47.Web.Data
                     FirstName = "Tiago",
                     LastName = "Lima",
                     Email = "tiago.sa.lima@formandos.cinel.pt",
-                    UserName = "tiago.sa.lima@formandos.cinel.pt"
+                    UserName = "tiago.sa.lima@formandos.cinel.pt",
                 };
 
                 var result = await _userHelper.AddUserAsync(user, "123456");
-
                 if (result != IdentityResult.Success)
                 {
                     throw new InvalidOperationException("Could not create the user in seeder");
                 }
+
+                await _userHelper.AddUserToRoleAsync(user, "Admin");
+            }
+
+            var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin");
+            if (!isInRole)
+            {
+                await _userHelper.AddUserToRoleAsync(user, "Admin");
             }
 
             if (!_context.Products.Any())
@@ -51,8 +59,7 @@ namespace ShopCET47.Web.Data
                 this.AddProduct("iPhone X", user);
                 this.AddProduct("Rato Mickey", user);
                 this.AddProduct("iWatch Series 4", user);
-                this.AddProduct("iPad 2", user);
-
+                this.AddProduct("Ipad 2", user);
                 await _context.SaveChangesAsync();
             }
         }
@@ -64,7 +71,7 @@ namespace ShopCET47.Web.Data
                 Name = name,
                 Price = _random.Next(1000),
                 IsAvailable = true,
-                Stock =_random.Next(100),
+                Stock = _random.Next(100),
                 User = user
             });
         }

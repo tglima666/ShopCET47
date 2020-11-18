@@ -9,7 +9,7 @@ namespace ShopCET47.Web.Data.Repositories
     {
         IQueryable<T> GetAll();
 
-        Task<T> GetByIDAsync(int id);
+        Task<T> GetByIdAsync(int id);
 
         Task CreateAsync(T entity);
 

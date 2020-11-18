@@ -12,7 +12,6 @@ namespace ShopCET47.Web.Data.Repositories
 {
     public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
-
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
 
@@ -22,27 +21,27 @@ namespace ShopCET47.Web.Data.Repositories
             _userHelper = userHelper;
         }
 
-        public async Task AddItemToOrderAsync(AddItemViewModel model, string username)
+        public async Task AddItemToOrderAsync(AddItemViewModel model, string userName)
         {
-            var user = await _userHelper.GetUserByEmailAsync(username);
+            var user = await _userHelper.GetUserByEmailAsync(userName);
             if (user == null)
             {
                 return;
             }
 
-            var product = await _context.Products.FindAsync(model.ProductID);
-            if(product == null)
+            var product = await _context.Products.FindAsync(model.ProductId);
+            if (product == null)
             {
                 return;
             }
 
-            var OrderDetailTemp = await _context.OrderDetailTemps
+            var orderDetailTemp = await _context.OrderDetailTemps
                 .Where(odt => odt.User == user && odt.Product == product)
                 .FirstOrDefaultAsync();
 
-            if(OrderDetailTemp == null)
+            if (orderDetailTemp == null)
             {
-                OrderDetailTemp = new OrderDetailTemp
+                orderDetailTemp = new OrderDetailTemp
                 {
                     Price = product.Price,
                     Product = product,
@@ -50,22 +49,21 @@ namespace ShopCET47.Web.Data.Repositories
                     User = user,
                 };
 
-                _context.OrderDetailTemps.Add(OrderDetailTemp);
+                _context.OrderDetailTemps.Add(orderDetailTemp);
             }
-
             else
             {
-                OrderDetailTemp.Quantity += model.Quantity;
-                _context.OrderDetailTemps.Update(OrderDetailTemp);
+                orderDetailTemp.Quantity += model.Quantity;
+                _context.OrderDetailTemps.Update(orderDetailTemp);
             }
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> ConfirmOrderAsync(string username)
+        public async Task<bool> ConfirmOrderAsync(string userName)
         {
-            var user = await _userHelper.GetUserByEmailAsync(username);
-            if(user == null)
+            var user = await _userHelper.GetUserByEmailAsync(userName);
+            if (user == null)
             {
                 return false;
             }
@@ -75,7 +73,7 @@ namespace ShopCET47.Web.Data.Repositories
                 .Where(o => o.User == user)
                 .ToListAsync();
 
-            if(orderTmps == null || orderTmps.Count == 0)
+            if (orderTmps == null || orderTmps.Count == 0)
             {
                 return false;
             }
@@ -91,7 +89,7 @@ namespace ShopCET47.Web.Data.Repositories
             {
                 OrderDate = DateTime.UtcNow,
                 User = user,
-                Items = details
+                Items = details,
             };
 
             _context.Orders.Add(order);
@@ -103,7 +101,7 @@ namespace ShopCET47.Web.Data.Repositories
         public async Task DeleteDetailTempAsync(int id)
         {
             var orderDetailTemp = await _context.OrderDetailTemps.FindAsync(id);
-            if(orderDetailTemp == null)
+            if (orderDetailTemp == null)
             {
                 return;
             }
@@ -115,22 +113,20 @@ namespace ShopCET47.Web.Data.Repositories
         public async Task<IQueryable<OrderDetailTemp>> GetDetailTempsAsync(string username)
         {
             var user = await _userHelper.GetUserByEmailAsync(username);
-
             if (user == null)
             {
                 return null;
             }
 
             return _context.OrderDetailTemps
-                .Include(o => o.Product)
-                .Where(o => o.User == user)
-                .OrderBy(o => o.Product.Name);
+               .Include(o => o.Product)
+               .Where(o => o.User == user)
+               .OrderBy(o => o.Product.Name);
         }
 
         public async Task<IQueryable<Order>> GetOrderAsync(string username)
         {
             var user = await _userHelper.GetUserByEmailAsync(username);
-
             if (user == null)
             {
                 return null;
@@ -142,12 +138,12 @@ namespace ShopCET47.Web.Data.Repositories
                 return _context.Orders
                 .Include(o => o.User)
                 .Include(o => o.Items)
-                .ThenInclude(i => i.Product)                
+                .ThenInclude(i => i.Product)
                 .OrderByDescending(o => o.OrderDate);
 
             }
 
-            //os users normais
+            //ou users normais
             return _context.Orders
                 .Include(o => o.Items)
                 .ThenInclude(i => i.Product)
@@ -159,13 +155,13 @@ namespace ShopCET47.Web.Data.Repositories
         public async Task ModifyOrderDetailTempQuantityAsync(int id, double quantity)
         {
             var orderDetailTemp = await _context.OrderDetailTemps.FindAsync(id);
-            if(orderDetailTemp == null)
+            if (orderDetailTemp == null)
             {
                 return;
             }
 
             orderDetailTemp.Quantity += quantity;
-            if(orderDetailTemp.Quantity > 0)
+            if (orderDetailTemp.Quantity > 0)
             {
                 _context.OrderDetailTemps.Update(orderDetailTemp);
                 await _context.SaveChangesAsync();
