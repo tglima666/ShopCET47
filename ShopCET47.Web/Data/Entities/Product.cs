@@ -14,11 +14,11 @@ namespace ShopCET47.Web.Data.Entities
         [MaxLength(50, ErrorMessage = "The field {0} only can contain a maximum {1} characters")]
         public string Name { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
-        public decimal Price { get; set; }
-
         [Display(Name = "Image")]
         public string ImageUrl { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
+        public decimal Price { get; set; }        
 
         [Display(Name = "Last Purchase")]
         public DateTime? LastPurchase { get; set; }
